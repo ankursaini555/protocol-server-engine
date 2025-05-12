@@ -1,0 +1,14 @@
+flows:
+  - summary: IGM Flow
+    id: igm-flow
+    domain: ONDC:RET10
+    shouldDispaly: true
+    sessionData:
+      version: "2.0.0"
+      bankAccountNumber: "1234567890"
+      ifscCode": " "
+
+    protocol:
+      $ref: ./igm-flow/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./igm-flow/calls.yaml#/calls

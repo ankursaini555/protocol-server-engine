@@ -1,0 +1,41 @@
+protocol:
+  update:
+    mapping:
+      - beckn_key: context.bap_id
+        value: session.bap_id
+      - beckn_key: context.bap_uri
+        value: session.bap_uri
+      - beckn_key: context.bpp_id
+        value: session.bpp_id
+      - beckn_key: context.bpp_uri
+        value: session.bpp_uri
+      - beckn_key: context.location.country.code
+        value: session.country
+      - beckn_key: context.location.city.code
+        value: session.cityCode
+      - beckn_key: context.transaction_id
+        value: session.currentTransactionId
+      - beckn_key: context.message_id
+        value: messageId
+      - beckn_key: context.timestamp
+        value: timestamp
+      - beckn_key: context.domain
+        value: session.domain
+      - beckn_key: context.version
+        value: session.version
+      - beckn_key: context.ttl
+        value: session.ttl
+      - beckn_key: context.action
+        value: action
+
+      - beckn_key: message.update_target
+        value: '"payments"'
+      - beckn_key: message.order.id
+        value: data.orderId
+      - beckn_key: message.order.payments[0].time.label
+        value: '"MISSED_EMI_PAYMENT"'
+
+  on_update:
+    mapping:
+      - business_key: error
+        extractionPath: error

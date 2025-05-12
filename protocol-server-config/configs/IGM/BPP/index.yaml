@@ -1,0 +1,260 @@
+flows:
+  - summary: IGM
+    id: igm-flow
+    createSessionAtBuyer: true
+    domain: ONDC:RET10
+    shouldDispaly: true
+    sessionData:
+      on_status: true
+      dualmode: true
+      currency: INR
+      subscriber_url: https://igm-mock-service.ondc.org/igm-protocol-server-preprod/ondc
+      subscriber_id: igm-mock-service.ondc.org/igm-protocol-server-preprod
+      actorsKey:
+        - id: NP2
+          type: COUNTERPARTY_NP
+          info:
+            org:
+              name: sellerapp.com::ONDC:RET10
+            contact:
+              phone: '9450394140'
+              email: respondentapp@respond.com
+            person:
+              name: Jane Doe
+      resolutions:
+        - id: R_PARENT
+          descriptor:
+            code: PARENT
+            short_desc: PROVIDING RESOLUTION OPTIONS. PLEASE SELECT ONE
+          updated_at: "2024-08-14T09:57:58.841Z"
+          proposed_by: NP2
+
+        - id: R1
+          ref_id: R_PARENT
+          ref_type: PARENT
+          descriptor:
+            code: REFUND
+            short_desc: Providing refund for the item
+          updated_at: "2024-08-14T09:57:58.841Z"
+          proposed_by: NP2
+          tags:
+            - descriptor:
+                code: RESOLUTION_DETAILS
+              list:
+                - descriptor:
+                    code: ITEM
+                  value: I1
+                - descriptor:
+                    code: REFUND_AMOUNT
+                  value: "200"
+
+        - id: R2
+          ref_id: R_PARENT
+          ref_type: PARENT
+          descriptor:
+            code: REPLACEMENT
+            short_desc: Providing replacement of the item
+          updated_at: "2024-08-14T09:57:58.841Z"
+          proposed_by: NP2
+          tags:
+            - descriptor:
+                code: RESOLUTION_DETAILS
+              list:
+                - descriptor:
+                    code: ITEM
+                  value: I1
+      info_requested:
+        - INFO0001
+        - INFO0002
+        - INFO0003
+
+      proposed:
+        # - id: A9
+          ref_id: R_PARENT
+          ref_type: RESOLUTIONS
+          description:
+            code: RESOLUTION_PROPOSED
+          # updated_at: "2023-01-15T10:00:00.469Z"
+          # action_by: NP2
+          # actor_details:
+          #   name: Sam Manuel
+
+      replacement:
+        # - id: A11
+          ref_id: R2
+          ref_type: RESOLUTIONS
+          description:
+            code: RESOLVED
+            name: REPLACEMENT
+          # short_desc: Providing replacement
+          # updated_at: "2023-01-15T10:00:00.469Z"
+          # action_by: NP2
+          # actor_details:
+          #   name: Sam Manuel
+      
+      refund:
+        # - id: A11
+          ref_id: R1
+          ref_type: RESOLUTIONS
+          description:
+            code: RESOLVED
+            name: REFUND
+          # short_desc: Providing refund
+          # updated_at: "2023-01-15T10:00:00.469Z"
+          # action_by: NP2
+          # actor_details:
+          #   name: Sam Manuel
+
+      resolution_keys:
+        - id: A9
+          ref_id: R_PARENT
+          ref_type: RESOLUTIONS
+          description:
+            code: RESOLUTION_PROPOSED
+          updated_at: "2023-01-15T10:00:00.469Z"
+          action_by: NP2
+          actor_details:
+            name: Sam Manuel
+
+        - id: A10
+          ref_id: R2
+          ref_type: RESOLUTIONS
+          description:
+            code: RESOLUTION_ACCEPTED
+          updated_at: "2023-01-15T10:00:00.469Z"
+          action_by: NP1
+          actor_details:
+            name: Sam Manuel
+
+        - id: A11
+          ref_id: R2
+          ref_type: RESOLUTIONS
+          description:
+          code: RESOLVED
+          name: REPLACEMENT
+          short_desc: Providing replacement
+          updated_at: "2023-01-15T10:00:00.469Z"
+          action_by: NP2
+          actor_details:
+            name: Sam Manuel
+    protocol:
+      $ref: ./igm-flow/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./igm-flow/calls.yaml#/calls
+    api:
+      issue:
+        default:
+          service_url: http://localhost:5501/mapper/ondc
+          sync: false
+    ui: true
+
+  - summary: IGM
+    id: igm-reverse-flow
+    createSessionAtBuyer: true
+    dualmode: true
+    domain: ONDC:RET10
+    shouldDispaly: true
+    sessionData:
+      closed_tags:
+        - descriptor:
+            code: CLOSURE_DETAILS
+          list:
+          - descriptor:
+              code: RATING
+            value: THUMBS_UP
+      on_status: true
+      currency: INR
+      dualmode: true
+      subscriber_url: https://igm-mock-service.ondc.org/igm-protocol-server-preprod/ondc
+      subscriber_id: igm-mock-service.ondc.org/igm-protocol-server-preprod
+      issueId: "ISSUE-1"
+      issueStatus: "OPEN"
+      issuelevel: "ISSUE"
+      expected_response_time:
+        duration: "PT2H"
+      expected_resolution_time:
+        duration: "P1D"
+      item_tags:
+        - descriptor:
+            code: "message.order.items"
+          list:
+            - descriptor:
+                code: "quantity.selected.count"
+              value: "2"
+      actors:
+        - id: "CUST1"
+          type: "CONSUMER"
+          info:
+            org:
+              name: "buyerapp.com::ONDC:RET10"
+            person:
+              name: "Sam Manuel"
+            contact:
+              phone: "9879879870"
+              email: "sam@yahoo.com"
+        - id: "NP1"
+          type: "INTERFACING_NP"
+          info:
+            org:
+              name: "buyerapp.com::ONDC:RET10"
+            contact:
+              phone: "9450394039"
+              email: "buyerapp@interface.com"
+            person:
+              name: "John Doe"
+      sourceId: "CUST1"
+      complainantId: "NP1"
+      description:
+        code: "ITM004"
+        short_desc: "Issue with product quality"
+        long_desc: "Product quality is not correct. facing issues while using the product"
+        additional_desc:
+          url: "https://buyerapp.com/additonal-details/desc.txt"
+          content_type: "text/plain"
+        images:
+          - "http://buyerapp.com/addtional-details/img1.png"
+          - "http://buyerapp.com/addtional-details/img2.png"
+      lastactionid: "A1"
+      action_id: "A1"
+      resolution_keys_proposed:
+        id: A9
+        ref_id: R_PARENT
+        ref_type: RESOLUTIONS
+        description:
+          code: RESOLUTION_PROPOSED
+        updated_at: "2023-01-15T10:00:00.469Z"
+        action_by: NP2
+        actor_details:
+            name: Sam Manuel
+      actions_description:
+        code: "OPEN"
+        short_desc: "Complaint created"
+      actor_details:
+        name: "Sam Manuel"
+      action_append: []
+      actions: []
+
+    protocol:
+      $ref: ./igm-reverse-flow/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./igm-reverse-flow/calls.yaml#/calls
+    api:
+      issue:
+        default:
+          service_url: http://localhost:5501/mapper/ondc
+          sync: false
+    ui: true
+
+flow_selector:
+  issue:
+    default:
+      config_id: "igm-flow"
+
+
+  on_issue:
+    default:
+      config_id: "igm-reverse-flow"
+
+  session-builder:
+    default:
+      config_id: "igm-reverse-flow"

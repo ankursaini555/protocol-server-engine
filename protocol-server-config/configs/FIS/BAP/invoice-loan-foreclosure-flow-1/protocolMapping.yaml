@@ -1,0 +1,18 @@
+protocol:
+  update:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.update_target
+        value: '"payments"'
+      - beckn_key: message.order.id
+        value: data.orderId
+      - beckn_key: message.order.payments[0].time.label
+        value: '"FORECLOSURE"'
+
+  on_update:
+    mapping:
+      - business_key: error
+        extractionPath: error

@@ -1,0 +1,224 @@
+type: object
+properties:
+  context:
+    description: Describes a beckn message context
+    type: object
+    properties:
+      domain:
+        type: string
+      location:
+        type: object
+        properties:
+          country:
+            type: object
+            properties:
+              code:
+                type: string
+                example: IND
+          city:
+            type: object
+            properties:
+              code:
+                type: string
+                example: '*'
+      action:
+        type: string
+        description: >-
+          Defines the Beckn API call. Any actions other than the enumerated
+          actions are not supported by Beckn  Protocol
+      core_version:
+        type: string
+        description: Version of Beckn core API specification being used
+      bap_id:
+        type: string
+        description: >-
+          Unique id of the BAP. By default it is the fully qualified domain name
+          of the BAP
+      bap_uri:
+        type: string
+        format: uri
+        description: >-
+          URI of the BAP for accepting callbacks. Must have the same domain name
+          as the bap_id
+      bpp_id:
+        type: string
+        description: >-
+          Unique id of the BPP. By default it is the fully qualified domain name
+          of the BPP
+      bpp_uri:
+        type: string
+        format: uri
+        description: URI of the BPP. Must have the same domain name as the bap_id
+      transaction_id:
+        type: string
+        description: >-
+          This is a unique value which persists across all API calls from search
+          through confirm
+      message_id:
+        type: string
+        description: >-
+          This is a unique value which persists during a request / callback
+          cycle
+      timestamp:
+        type: string
+        format: date-time
+        description: Time of request generation in RFC3339 format
+      key:
+        type: string
+        description: The encryption public key of the sender
+      ttl:
+        type: string
+        description: >-
+          The duration in ISO8601 format after timestamp for which this message
+          holds valid
+    required:
+      - domain
+      - action
+      - location
+      - core_version
+      - transaction_id
+      - message_id
+      - bap_id
+      - bap_uri
+      - timestamp
+  message:
+    type: object
+    properties:
+      issue:
+        type: object
+        properties:
+          id:
+            type: string
+          status:
+            type: string
+          level:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+          expected_response_time:
+            type: object
+            properties:
+              duration:
+                type: string
+          expected_resolution_time:
+            type: object
+            properties:
+              duration:
+                type: string
+          refs:
+            type: array
+            items:
+              type: object
+              properties:
+                ref_id:
+                  type: string
+                ref_type:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      descriptor:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            descriptor:
+                              type: object
+                              properties:
+                                code:
+                                  type: string
+                            value:
+                              type: string
+          actors:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                info:
+                  type: object
+                  properties:
+                    org:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    person:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    contact:
+                      type: object
+                      properties:
+                        phone:
+                          type: string
+                        email:
+                          type: string
+          source_id:
+            type: string
+          complainant_id:
+            type: string
+          description:
+            type: object
+            properties:
+              code:
+                type: string
+              short_desc:
+                type: string
+              long_desc:
+                type: string
+              additional_desc:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  content_type:
+                    type: string
+              images:
+                type: array
+                items:
+                  type: string
+          last_action_id:
+            type: string
+          actions:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                description:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    short_desc:
+                      type: string
+                updated_at:
+                  type: string
+                  format: date-time
+                action_by:
+                  type: string
+                actor_details:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+required:
+  - context
+  - message

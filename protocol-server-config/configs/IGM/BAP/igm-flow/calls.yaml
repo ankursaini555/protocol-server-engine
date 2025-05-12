@@ -1,0 +1,8 @@
+calls:
+  - config: "issue"
+    mode: "ASYNC"
+    callback:
+      config: "on_issue"
+      endpoint: "mapper/ondc"
+      unsolicitedEndpoint: "mapper/unsolicited"
+ 

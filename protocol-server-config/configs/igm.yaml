@@ -1,0 +1,8 @@
+BAP:
+  $ref: ./protocol-server-config/configs/IGM/BAP/index.yaml
+BPP:
+  $ref: ./protocol-server-config/configs/IGM/BPP/index.yaml
+schema:
+  $ref: ./protocol-server-config/configs/schema/IGM/index.yaml
+
+version: "1.0.0"

@@ -1,0 +1,21 @@
+# filename = output json name
+# domain = path argument
+# path = data read from configs
+
+configs:
+  - filename: trv_build.json
+    domain: trv
+    path:
+      $ref: ./trv.yaml
+  - filename: fis_build.json
+    domain: fis
+    path:
+      $ref: ./fis.yaml
+  - filename: nts_build.json
+    domain: nts
+    path:
+      $ref: ./nts.yaml
+  - filename: igm_build.json
+    domain: igm
+    path:
+      $ref: ./igm.yaml

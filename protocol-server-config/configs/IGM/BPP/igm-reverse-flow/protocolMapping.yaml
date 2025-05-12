@@ -1,0 +1,268 @@
+protocol:
+  on_issue:
+    sessionData:
+      - business_key: resolutions
+        extractionPath: message.issue.resolutions
+
+      - business_key: bap_id
+        extractionPath: context.bap_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri
+      - business_key: cityCode
+        extractionPath: context.location.city.code || session.cityCode
+      - business_key: countryCode
+        extractionPath: context.location.country.code || session.countryCode
+      - business_key: message_id
+        extractionPath: context.message_id
+
+#store order details etc in session
+      # k
+
+      - business_key: context.bap_id
+        extractionPath: context.bap_id
+      - business_key: context.bap_uri
+        extractionPath: context.bap_uri
+      - business_key: context.bpp_id
+        extractionPath: context.bpp_ida
+      - business_key: context.bpp_uri
+        extractionPath: context.bpp_uri
+      - business_key: context.core_version
+        extractionPath: context.core_version
+
+      - business_key: ref_id_action
+        extractionPath: message.issue.actions.at(-1).id
+
+      - business_key: issueId
+        extractionPath:  message.issue.id
+
+      - business_key: issuelevel
+        extractionPath:  message.issue.level
+      
+      - business_key: issueStatus
+        extractionPath:  message.issue.status
+      
+      - business_key: issuelevel
+        extractionPath:  message.issue.level
+      
+      - business_key: expected_response_time
+        extractionPath:  message.issue.expected_response_time
+
+      - business_key: expected_resolution_time
+        extractionPath:  message.issue.expected_resolution_time
+
+      - business_key: sourceId
+        extractionPath:  message.issue.source_id
+      
+      - business_key: lastactionid
+        extractionPath:  message.issue.last_action_id
+      
+      - business_key: description
+        extractionPath:  message.issue.description
+
+      
+
+      - business_key: actors
+        extractionPath:  message.issue.actors
+
+      - business_key: complainantId
+        extractionPath:  message.issue.complainant_id
+
+      - business_key: refs
+        extractionPath:  message.issue.refs
+      
+      - business_key: actions
+        extractionPath:  message.issue.actions
+
+    mapping:
+      - business_key: context
+        extractionPath: context
+
+      - business_key: message
+        extractionPath: message
+
+
+      # - business_key: context.action
+      #   extractionPath: context.action
+      # - business_key: context.transaction_id
+      #   extractionPath: context.transaction_id
+      # - business_key: context.message_id
+      #   extractionPath: context.message_id
+
+      #   #message
+      # - business_key: issue.id
+      #   extractionPath:  message.issue.id
+
+      # - business_key: issue.level
+      #   extractionPath:  message.issue.level
+      
+      # - business_key: issue.status
+      #   extractionPath:  message.issue.status
+
+      # - business_key: issue.source_id
+      #   extractionPath:  message.issue.source_id
+
+      # - business_key: issue.complainant_id
+      #   extractionPath:  message.issue.complainant_id
+
+      # - business_key: issue.description
+      #   extractionPath:  message.issue.description
+
+      # - business_key: issue.refs
+      #   extractionPath:  message.issue.refs
+
+      # - business_key: issue.refs
+      #   extractionPath:  message.issue.refs
+
+      # - business_key: issue.actors
+      #   extractionPath:  message.issue.actors
+
+      # - business_key: issue.actions
+      #   extractionPath:  message.issue.actions
+
+      # - business_key: issue.expected_resolution_time
+      #   extractionPath:  message.issue.expected_resolution_time
+      
+      # - business_key: issue.expected_response_time
+      #   extractionPath:  message.issue.expected_response_time
+      
+      
+      # - business_key: issue.last_action_id
+      #   extractionPath:  message.issue.last_action_id
+
+  issue:
+    sessionData:
+      # - beckn_key: dummy #adding closed_description_tags
+      #   value: "data.actions_description.code == 'CLOSED' ? data.actions_description.tags = session.closed_tags : data.actions_description.tags"
+
+      - beckn_key: actions_append
+        # value: 'session.actions_append=[{id:data.id,description:  ( String(data.actions_description.name) !== "false" && data.actions_description || {code:data.actions_description.code,short_desc:data.actions_description.short_desc}),(data.images !== "" &&  images: data.images.split(",")  || ""),updated_at:new Date().toISOString(),action_by:"NP2",actor_detail:data.actor_detail}]; session.actions_append '
+        value: 'session.actions_append= removeEmptyKeys([{id:data.id,description:  ( String(data.actions_description.name) !== "false" && data.actions_description || {code:data.actions_description.code,short_desc:data.actions_description.short_desc,images:data.actions_description.images}),updated_at:new Date().toISOString(),action_by:"NP1",actor_details:data.actor_detail,ref_id:data.ref_id,ref_type:data.ref_type,tags: data.actions_description.code == "CLOSED" ? session.closed_tags:""}]);  session.actions_append '
+
+      - beckn_key: resolution_keys_proposed_key
+        value: session.resolution_keys_proposed_key = String(data.Resolution) !== "false" && data.Resolution !== undefined  ? [{id:data.id,ref_id:data.Resolution,ref_type:"RESOLUTION", updated_at:new Date().toISOString(),action_by:"NP2","actor_details.name":"Sam Manuel"}]:[] 
+
+      - beckn_key: actions
+        value: '[...session.actions,...session.actions_append]'
+      
+      - beckn_key: refs
+        value: 'const ref = []; for (const [ref_type, ref_id] of Object.entries(data.ref)) {ref_id !="" && ref.push({ ref_id, ref_type });} ref;'
+
+      - beckn_key: description_key
+        value: '({code:data.category,short_desc:session.description.short_desc,long_desc:session.description.long_desc,additional_desc:session.description.additional_desc,images:session.description.images})'
+
+      - beckn_key: issuelevel
+        value: data.actions_description.code==='ESCALATED'?'GRIEVANCE':session.issuelevel
+
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+       
+      - beckn_key: message.issue.id
+        value: session.issueId
+
+      - beckn_key: message.issue.level
+        value: session.issuelevel
+
+
+      - beckn_key: message.issue.status
+        value: session.issueStatus  
+
+      - beckn_key: message.issue.expected_response_time
+        value:  session.expected_response_time
+
+      - beckn_key: message.issue.expected_resolution_time
+        value:  session.expected_resolution_time
+
+      - beckn_key: message.issue.refs
+        value:  session.refs
+
+      - beckn_key: message.issue.refs[1].tags
+        value:  session.refs[1] && session.item_tags
+
+      - beckn_key: message.issue.actors
+        value:  session.actors 
+
+      - beckn_key: message.issue.source_id
+        value:  session.sourceId
+
+      - beckn_key: message.issue.complainant_id
+        value:  session.complainantId 
+
+      - beckn_key: message.issue.description
+        value:  session.description_key
+      
+      - beckn_key: message.issue.last_action_id
+        value: data.id
+
+      - beckn_key: message.issue.actions
+        value: session.actions
+
+      - beckn_key: message.issue.created_at
+        value: session.created_at
+
+      - beckn_key: message.issue.updated_at
+        value: 'new Date(new Date().setHours(new Date().getHours() - 5))'
+
+      - beckn_key: message.issue.resolutions
+        value: session.resolutions
+        # value: session.actions
+
+
+  issue_status:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.issue_id
+        value: session.issueId
+
+  on_issue_status:
+    mapping:  
+      - business_key: context
+        extractionPath: context        
+
+      - business_key: message
+        extractionPath: message        
+
+  session-builder:
+    sessionData:
+      - business_key: url
+        extractionPath: 'context.bap_uri && obj.context.bpp_uri && obj.context.bap_uri == session.subscriber_url ? obj.context.bpp_uri : obj.context.bap_uri ||  obj.context.bpp_uri && obj.context.bpp_uri || obj.context.bap_uri && obj.context.bap_uri'
+
+      - business_key: bap_id
+        extractionPath: context.bap_id && obj.context.bap_id || session && session.subscriber_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri && obj.context.bap_uri || session && session.subscriber_url
+      - business_key: bpp_id
+        extractionPath: context.bpp_id && obj.context.bpp_id || session && session.subscriber_id
+      - business_key: bpp_uri
+        extractionPath: context.bpp_uri && obj.context.bpp_uri || session && session.subscriber_url
+      - business_key: cityCode
+        extractionPath: context.location.city.code || session.cityCode
+
+      - business_key: countryCode
+        extractionPath: context.location.country.code || session.countryCode
+
+      - business_key: message_id
+        extractionPath: context.message_id
+
+      - business_key: transactionid
+        extractionPath: context.transaction_id
+
+      - business_key: messageid
+        extractionPath: context.message_id
+
+      - business_key: core_version
+        extractionPath: context.core_version
+        
+      - business_key: domain
+        extractionPath: context.domain
+
+      - business_key: created_at
+        extractionPath: 'session.created_at?session.created_at:new Date(new Date().setDate(new Date().getDate() - 2))'
+        
+    mapping:  
+      - business_key: context
+        extractionPath: context        

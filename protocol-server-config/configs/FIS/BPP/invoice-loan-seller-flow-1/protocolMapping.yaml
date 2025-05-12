@@ -1,0 +1,359 @@
+protocol:
+  search:
+    sessionData:
+      - business_key: bap_id
+        extractionPath: context.bap_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri
+      - business_key: cityCode
+        extractionPath: context.location.city.code || session.cityCode
+      - business_key: countryCode
+        extractionPath: context.location.country.code || session.countryCode
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      # - business_key: context.domain
+      #   extractionPath: session.domain
+      # - business_key: context.version
+      #   extractionPath: session.version
+      # - business_key: context.transaction_id
+      #   extractionPath: session.transaction_id
+      # - business_key: context.message_id
+      #   extractionPath: session.message_id
+      # - business_key: context.bap_id
+      #   extractionPath: session.bap_id
+      # - business_key: context.bap_uri
+      #   extractionPath: session.bap_uri
+      # - business_key: context.action
+      #   extractionPath: context.action
+      # - business_key: context.location.city.code
+      #   extractionPath: session.cityCode
+      # - business_key: context.location.country.code
+      #   extractionPath: session.countryCode
+      # - business_key: context.ttl
+      #   extractionPath: context.ttl
+
+      - business_key: message.intent.category.descriptor.code
+        extractionPath: message.intent.category.descriptor.code
+
+
+
+
+  on_search:
+    sessionData:
+      - beckn_key: consentHandler
+        value: data.consentHandler
+
+      - beckn_key: itemid
+        value: data.itemid
+
+   
+      - beckn_key: price.value
+        value: data.offerpricevalue     
+
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+    ##message
+
+      - beckn_key: message.catalog.descriptor.name
+        value: data.name || session.catalogname
+        
+
+      # Provider
+      - beckn_key: message.catalog.providers[0].descriptor
+        value: data.loan_provider        ||  session.loan_provider
+
+      - beckn_key: message.catalog.providers[0].id
+        value: data.loan_provider_id        ||  session.loan_provider_id
+
+      - beckn_key: message.catalog.providers[0].categories
+        value: data.categories || session.categories
+
+
+
+       #ui inputs (item && item tags)
+      - beckn_key: message.catalog.providers[0].items[0].id
+        value: data.itemid || session.itemid #fetch item id from data on first call than session for later calls
+        
+      - beckn_key: message.catalog.providers[0].items[0].matched
+        value: data.matched || session.matched #fetch item id from data on first call than session for later calls
+
+      - beckn_key: message.catalog.providers[0].items[0].recommended
+        value: data.matched || session.matched #fetch item id from data on first call than session for later calls
+
+
+      - beckn_key: message.catalog.providers[0].items[0].tags
+        value: data.itemtags                || session.itemtags
+        compute: buildTags(data.itemtags    || session.itemtags,true,true)
+
+      #item offer
+      - beckn_key: message.catalog.providers[0].items[1].price
+        value: data.offerpricevalue && session.price #fetch item id from data on first call than session for later calls
+        
+      - beckn_key: message.catalog.providers[0].items[1].price.currency
+        value: data.offerpricevalue && session.currency
+
+      - beckn_key: message.catalog.providers[0].items[1].matched
+        value: data.offerpricevalue && session.matched #fetch item id from data on first call than session for later calls
+
+      - beckn_key: message.catalog.providers[0].items[1].recommended
+        value: data.offerpricevalue && session.matched #fetch item id from data on first call than session for later calls
+
+
+      - beckn_key: message.catalog.providers[0].items[1].id
+        value: data.offeritemid
+
+      - beckn_key: message.catalog.providers[0].items[1].parent_item_id
+        value: data.Parentitemid
+
+
+      - beckn_key: message.catalog.providers[0].items[1].tags
+        value: data.offertags                || session.offertags
+        compute: buildTags(data.offertags    || session.offertags,true,true)
+
+        
+
+      #Items 
+      # - beckn_key: message.catalog.providers[0].items
+      #   value: data.loan_offers
+      - beckn_key: message.catalog.providers[0].items[0].category_ids[0]
+        value: data?.categories?.id || session.categories[0].id
+
+      - beckn_key: message.catalog.providers[0].items[0].descriptor
+        value: session.categories[0].descriptor
+        
+
+      - beckn_key: message.catalog.providers[0].items[0].xinput
+        value: data.xinput
+
+  # offer
+      - beckn_key: message.catalog.providers[0].items[1].category_ids[0]
+        value: (session.price.value && data?.categories?.id || session.categories[0].id)
+
+      - beckn_key: message.catalog.providers[0].items[1].descriptor
+        value: (session.price.value && session.categories[0].descriptor)
+
+      # - beckn_key: message.catalog.providers[0].items[1].id
+      #   value: data.itemid1
+
+
+      #Tags
+      - beckn_key: message.catalog.providers[0].tags
+        value: data.tags                || session.tags
+        compute: buildTags(data.tags    || session.tags,true,true)
+
+
+      #payments
+      - beckn_key: message.catalog.providers[0].payments[0].tags
+        value: data.paymentTagsSearch       || session.paymentTagsSearch
+        compute: buildTags(data.paymentTagsSearch || session.paymentTagsSearch)
+
+      - beckn_key: message.catalog.providers[0].payments[0].collected_by
+        value: data.payment_collectedby || session.collectedBy
+
+
+      - beckn_key: message
+        value: data.error && data.message
+      - beckn_key: message
+        value: data.message2
+
+      - beckn_key: error
+        value: data.error
+    # loop:
+    #   - key: message.intent.provider[0].items
+
+    afterMapping:
+      - beckn_key: items
+        value: data.message.catalog.providers[0].items
+
+      # #sample 
+      # - beckn_key: message.catalog.providers[0].items[index].id
+      #   value: data.item || session.id
+      #   loop: true
+
+
+
+  select:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+
+      - business_key: message.order.items
+        extractionPath: message.order.items
+
+
+
+  on_select:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.order.items
+        value: data.message.order.items
+
+#form transaction id
+      - beckn_key: message.order.items[0].xinput.form.url
+        value: data.message.order.items[0].xinput.form.url && data.message.order.items[0].xinput.form.url +session.transaction_id
+
+
+
+      - beckn_key: message.order.quote
+        value: data.message.order.quote
+
+      #provider        
+      - beckn_key: message.order.provider.descriptor
+        value: data.loan_provider        ||  session.loan_provider
+
+      - beckn_key: message.order.provider.id
+        value: data.loan_provider_id        ||  session.loan_provider_id
+
+      - beckn_key: message.order.provider.tags
+        value: data.tags                || session.tags
+        compute: buildTags(data.tags    || session.tags,true,true)
+
+
+
+
+  init:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+
+      - business_key: items
+        extractionPath: message.order.items
+
+      # - business_key: bank_details
+      #   extractionPath: message.order.payments[0].params
+        
+
+  on_init:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+      # #payments
+      # - beckn_key: message.order.payments[0].tags
+      #   value: data.paymentTagsSearch       || session.paymentTagsSearch
+      #   compute: buildTags(data.paymentTagsSearch || session.paymentTagsSearch)
+
+      # - beckn_key: message.order.payments[0].collected_by
+      #   value: data.payment_collectedby || session.collectedBy
+
+      - beckn_key: message.order.cancellation_terms
+        value: data.cancellation_terms || session.cancellation_terms
+
+      #provider        
+      - beckn_key: message.order.provider.descriptor
+        value: data.loan_provider        ||  session.loan_provider
+
+      - beckn_key: message.order.provider.id
+        value: data.loan_provider_id        ||  session.loan_provider_id
+
+      - beckn_key: message.order.provider.tags
+        value: data.tags                || session.tags
+        compute: buildTags(data.tags    || session.tags,true,true)
+
+#form transaction id
+      - beckn_key: message.order.items[0].xinput.form.url
+        value: data.message.order.items[0].xinput.form.url && data.message.order.items[0].xinput.form.url +session.transaction_id
+
+
+  confirm:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      - business_key: items
+        extractionPath: message.order.items
+
+      # - business_key: bank_details
+      #   extractionPath: message.order.payments[0].params
+
+  on_confirm:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+
+  update:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      - business_key: items
+        extractionPath: message.order
+
+      # - business_key: bank_details
+      #   extractionPath: message.order.payments[0].params
+
+
+
+  on_update:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  status:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      - business_key: message
+        extractionPath: message
+
+  on_status:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+    
+      - beckn_key: message.order.cancellation_terms
+        value: data.cancellation_terms || session.cancellation_terms
+
+      - beckn_key: message.order.payments
+        value: data.message.order.payments
+
+      - beckn_key: message.order.fulfillments
+        value: data.message.order.fulfillments
+
+      - beckn_key: message.order.items
+        value: data.message.order.items
+
+      - beckn_key: message.order.quote
+        value: data.message.order.quote
+
+      #provider        
+      - beckn_key: message.order.provider.descriptor
+        value: data.loan_provider        ||  session.loan_provider
+
+      - beckn_key: message.order.provider.id
+        value: data.loan_provider_id        ||  session.loan_provider_id
+
+      - beckn_key: message.order.provider.tags
+        value: data.tags                || session.tags
+        compute: buildTags(data.tags    || session.tags,true,true)

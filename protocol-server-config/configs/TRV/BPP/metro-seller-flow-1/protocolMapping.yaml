@@ -1,0 +1,140 @@
+protocol:
+  search:
+    sessionData:
+      - business_key: bap_id
+        extractionPath: context.bap_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri
+      - business_key: cityCode
+        extractionPath: context.location.city.code || session.cityCode
+      - business_key: countryCode
+        extractionPath: context.location.country.code || session.countryCode
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message.something
+        extractionPath: message.item
+
+  on_search:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  select:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message
+        extractionPath: message
+
+  on_select:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  init:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+        
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message
+        extractionPath: message
+
+  on_init:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  confirm:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+        
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message
+        extractionPath: message
+
+  on_confirm:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  status:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+        
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message
+        extractionPath: message
+
+  on_status:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message
+
+  cancel:
+    sessionData:
+      - business_key: message_id
+        extractionPath: context.message_id
+        
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - business_key: message
+        extractionPath: message
+
+  on_cancel:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message
+        value: data.message

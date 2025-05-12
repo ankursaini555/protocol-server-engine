@@ -1,0 +1,26 @@
+flows:
+  - summary: Metro Flow
+    id: metro-flow-1
+    domain: ONDC:TRV11
+    shouldDispaly: false
+
+    sessionData:
+      version: "2.0.0"
+      collectedBy: BAP
+      bankAccountNumber: "123456789"
+      virtualPaymentAddress: "adasd@okiciic"
+      bankCode: "fj3jf9ij3f02"
+      vehicleCategaory: METRO
+      paymentTagsSearch:
+        BUYER_FINDER_FEES:
+          BUYER_FINDER_FEES_TYPE: percent-annualized
+          BUYER_FINDER_FEES_PERCENTAGE: "1"
+        SETTLEMENT_TERMS:
+          DELAY_INTEREST: 2.5
+          STATIC_TERMS: ""
+          OFFLINE_CONTRACT: "true"
+
+    protocol:
+      $ref: ./metro-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./metro-flow-1/calls.yaml#/calls

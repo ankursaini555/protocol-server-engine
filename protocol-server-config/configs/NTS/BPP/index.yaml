@@ -1,0 +1,43 @@
+
+flows:
+  - summary: NTS
+    id: nts-services
+    createSessionAtBuyer: true
+    domain: ONDC:NTS10
+    shouldDispaly: true
+    sessionData:
+      dualmode: true
+      currency: INR
+      # bpp_uri: https://rsf-mock-service.ondc.org/seller_protocol_server_preprod
+      # bpp_id: rsf-mock-service.ondc.org/seller_protocol_server_preprod
+      subscriber_id: rsf-mock-service.ondc.org/seller_protocol_server_preprod
+      subscriber_url: https://rsf-mock-service.ondc.org/seller_protocol_server_preprod
+    protocol:
+      $ref: ./rsf_flow/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./rsf_flow/calls.yaml#/calls
+    api:
+    ui: true
+
+
+flow_selector:
+  settle:
+    default:
+      config_id: "nts-services"
+    nts-flow:
+      condition:
+          operation:
+            type: AND
+            input:
+              value:
+              - operation:
+                  type: EQUAL
+                  title: Check settlement type message code
+                  input:
+                    value:
+                      - operation:
+                          type: READ
+                          input:
+                            value: "req_body.message.settlement.type"
+                      - NP-NP
+      config_id  : "nts-services"

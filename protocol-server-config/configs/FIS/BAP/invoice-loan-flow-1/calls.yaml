@@ -1,0 +1,45 @@
+unsolicited:
+  - config: "on_status"
+    endpoint: "mapper/unsolicited"
+  - config: "on_update"
+    endpoint: "mapper/unsolicited"
+
+calls:
+  - config: "search"
+    mode: "ASYNC"
+    callback:
+      config: "on_search"
+      endpoint: "mapper/ondc"
+      unsolicitedEndpoint: "mapper/unsolicited"
+  - config: "select"
+    mode: "ASYNC"
+    callback:
+      config: "on_select"
+      endpoint: "mapper/ondc"
+      mode: "SYNC"
+      unsolicitedEndpoint: "mapper/unsolicited"
+  - config: "init"
+    mode: "SYNC"
+    callback:
+      config: "on_init"
+      endpoint: "mapper/ondc"
+      unsolicitedEndpoint: "mapper/unsolicited"
+  - config: "confirm"
+    mode: "ASYNC"
+    callback:
+      config: "on_confirm"
+      endpoint: "mapper/ondc"
+      unsolicitedEndpoint: "mapper/unsolicited"
+  - config: "status"
+    mode: "ASYNC"
+    callback:
+      config: "on_status"
+      endpoint: "mapper/ondc"
+      unsolicitedEndpoint: "mapper/unsolicited"
+  - config: "update"
+    mode: "ASYNC"
+    callback:
+      config: "on_update"
+      endpoint: "mapper/ondc"
+      mode: "SYNC"
+      unsolicitedEndpoint: "mapper/unsolicited"

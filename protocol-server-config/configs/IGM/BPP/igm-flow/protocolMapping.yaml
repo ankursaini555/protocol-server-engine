@@ -1,0 +1,224 @@
+protocol:
+  issue:
+    sessionData:
+      - business_key: url
+        extractionPath: 'context.bap_uri && obj.context.bpp_uri && obj.context.bap_uri == session.subscriber_url ? obj.context.bpp_uri : obj.context.bap_uri ||  obj.context.bpp_uri && obj.context.bpp_uri || obj.context.bap_uri && obj.context.bap_uri'
+      - business_key: bap_id
+        extractionPath: context.bap_id && obj.context.bap_id || session && session.subscriber_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri && obj.context.bap_uri || session && session.subscriber_url
+      - business_key: bpp_id
+        extractionPath: context.bpp_id && obj.context.bpp_id || session && session.subscriber_id
+      - business_key: bpp_uri
+        extractionPath: context.bpp_uri && obj.context.bpp_uri || session && session.subscriber_url
+        
+      - business_key: cityCode
+        extractionPath: context.location.city.code || session.cityCode
+      - business_key: countryCode
+        extractionPath: context.location.country.code || session.countryCode
+      - business_key: message_id
+        extractionPath: context.message_id
+      - business_key: domain
+        extractionPath: context.domain
+
+      - business_key: bap_id
+        extractionPath: context.bap_id
+      - business_key: bap_uri
+        extractionPath: context.bap_uri
+      - business_key: bpp_id
+        extractionPath: context.bpp_id
+      - business_key: bpp_uri
+        extractionPath: context.bpp_uri
+      - business_key: core_version
+        extractionPath: context.core_version
+
+      - business_key: issueId
+        extractionPath:  message.issue.id
+
+      - business_key: issuelevel
+        extractionPath:  message.issue.level
+      
+      - business_key: issueStatus
+        extractionPath:  message.issue.status
+      
+      - business_key: issuelevel
+        extractionPath:  message.issue.level
+      
+      - business_key: expected_response_time
+        extractionPath:  message.issue.expected_response_time
+
+      - business_key: expected_resolution_time
+        extractionPath:  message.issue.expected_resolution_time
+
+      - business_key: sourceId
+        extractionPath:  message.issue.source_id
+      
+      - business_key: lastactionid
+        extractionPath:  message.issue.last_action_id
+      
+      - business_key: description
+        extractionPath:  message.issue.description
+
+
+      - business_key: actors
+        extractionPath:  message.issue.actors
+
+      - business_key: complainantId
+        extractionPath:  message.issue.complainant_id
+
+      - business_key: refs
+        extractionPath:  message.issue.refs
+      
+      - business_key: actions
+        extractionPath:  message.issue.actions
+
+      - business_key: created_at
+        extractionPath:  message.issue.created_at
+
+      - business_key: updated_at
+        extractionPath:  message.issue.updated_at  
+  
+
+
+    mapping:
+      - business_key: context.action
+        extractionPath: context.action
+      - business_key: context.transaction_id
+        extractionPath: context.transaction_id
+      - business_key: context.message_id
+        extractionPath: context.message_id
+
+        #message
+      - business_key: issue.xyz.action
+        extractionPath:  message.issue.xyz.action
+      
+      # - business_key: issue.id
+      #   extractionPath:  message.issue.id
+
+      # - business_key: issue.level
+      #   extractionPath:  message.issue.level
+      
+      # - business_key: issue.status
+      #   extractionPath:  message.issue.status
+
+      # - business_key: issue.source_id
+      #   extractionPath:  message.issue.source_id
+
+      # - business_key: issue.complainant_id
+      #   extractionPath:  message.issue.complainant_id
+
+      # - business_key: issue.description
+      #   extractionPath:  message.issue.description
+
+      # - business_key: issue.refs
+      #   extractionPath:  message.issue.refs
+
+      # - business_key: issue.actors
+      #   extractionPath:  message.issue.actors
+
+      # - business_key: issue.actions
+      #   extractionPath:  message.issue.actions
+
+      # - business_key: issue.expected_resolution_time
+      #   extractionPath:  message.issue.expected_resolution_time
+      
+      # - business_key: issue.expected_response_time
+      #   extractionPath:  message.issue.expected_response_time
+      
+      
+      # - business_key: issue.last_action_id
+      #   extractionPath:  message.issue.last_action_id
+
+  on_issue:
+    sessionData:
+      - beckn_key: status
+        value: data.status
+      
+      - beckn_key: actions_description
+        value:  ''
+
+#
+#actions_append
+      - beckn_key: actions_append
+        value: 'let action = {id:data.id,description:  ( String(data.actions_description.name) !== "false" && data.actions_description || {code:data.actions_description.code,short_desc:data.actions_description.short_desc})   ,updated_at:new Date().toISOString(),action_by:"NP2",actor_details:data.actor_detail}; action = String(data.send_resolution)==="false" ? action : {...action,...session[data.send_resolution] }; session.actions_append=[action];   session.actions_append;'
+        
+
+      - beckn_key: actions
+        value: '[...session.actions,...session.actions_append]' 
+        
+      - beckn_key: last_action_id
+        value: data.id
+
+
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.update_target.path
+        value: '"issue.actions"'
+      
+      - beckn_key: message.update_target.actions
+        value: '"APPENDED"'
+
+      - beckn_key: message.issue.id
+        value: session.issueId
+      
+      - beckn_key: message.issue.level
+        value: session.issuelevel
+
+      - beckn_key: message.issue.status
+        value: data.status && data.status
+
+      - beckn_key: message.issue.expected_response_time
+        value:  session.expected_response_time
+
+      - beckn_key: message.issue.expected_resolution_time
+        value:  session.expected_resolution_time
+
+      - beckn_key: message.issue.refs
+        value:  session.refs
+
+      - beckn_key: message.issue.actors
+        value:  '[...session.actors,...session.actorsKey]' 
+
+      - beckn_key: message.issue.source_id
+        value:  session.sourceId
+
+      - beckn_key: message.issue.complainant_id
+        value:  session.complainantId 
+
+      - beckn_key: message.issue.respondent_ids
+        value:  '["NP2"]'
+
+      - beckn_key: message.issue.description
+        value:  session.description
+      
+      - beckn_key: message.issue.last_action_id
+        value: session.last_action_id
+
+      - beckn_key: message.issue.actions
+        value: session.actions
+
+      
+      - beckn_key: message.issue.resolutions
+        value: String(data.send_resolution) !== "false" && session.resolutions 
+
+      - beckn_key: message.issue.created_at
+        value: session.created_at
+
+      - beckn_key: message.issue.updated_at
+        value: session.updated_at
+
+
+  issue_status:
+    status: true
+    mapping: []
+
+  on_issue_status:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+      - beckn_key: message
+        value: session.lastPayload.message

@@ -1,0 +1,159 @@
+type: object
+properties:
+  context:
+    description: Describes a beckn message context
+    type: object
+    properties:
+      domain:
+        type: string
+      location:
+        type: object
+        properties:
+          country:
+            type: object
+            properties:
+              code:
+                type: string
+                example: IND
+          city:
+            type: object
+            properties:
+              code:
+                type: string
+                example: '*'
+      action:
+        type: string
+        description: >-
+          Defines the Beckn API call. Any actions other than the enumerated
+          actions are not supported by Beckn Protocol
+      version:
+        type: string
+        description: Version of Beckn core API specification being used
+      bap_id:
+        type: string
+        description: >-
+          Unique id of the BAP. By default it is the fully qualified domain name
+          of the BAP
+      bap_uri:
+        type: string
+        format: uri
+        description: >-
+          URI of the BAP for accepting callbacks. Must have the same domain name
+          as the bap_id
+      bpp_id:
+        type: string
+        description: >-
+          Unique id of the BPP. By default it is the fully qualified domain name
+          of the BPP
+      bpp_uri:
+        type: string
+        format: uri
+        description: URI of the BPP. Must have the same domain name as the bap_id
+      transaction_id:
+        type: string
+        description: >-
+          This is a unique value which persists across all API calls from search
+          through confirm
+      message_id:
+        type: string
+        description: >-
+          This is a unique value which persists during a request / callback
+          cycle
+      timestamp:
+        type: string
+        format: date-time
+        description: Time of request generation in RFC3339 format
+      key:
+        type: string
+        description: The encryption public key of the sender
+      ttl:
+        type: string
+        description: >-
+          The duration in ISO8601 format after timestamp for which this message
+          holds valid
+    required:
+      - domain
+      - action
+      - location
+      - version
+      - transaction_id
+      - message_id
+      - bap_id
+      - bap_uri
+      - timestamp
+  message:
+    type: object
+    properties:
+      orders:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Describes the order id
+            amount: &ref_0
+              type: object
+              properties:
+                currency:
+                  type: string
+                  example: INR
+                value:
+                  type: string
+                  example: ''
+            recon_accord:
+              type: boolean
+            settlements:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  payment_id:
+                    type: string
+                  status:
+                    type: string
+                  amount:
+                    allOf:
+                      - type: object
+                        properties:
+                          diff_value:
+                            type: string
+                      - *ref_0
+                  commission:
+                    allOf:
+                      - type: object
+                        properties:
+                          diff_value:
+                            type: string
+                      - *ref_0
+                  withholding_amount:
+                    allOf:
+                      - type: object
+                        properties:
+                          diff_value:
+                            type: string
+                      - *ref_0
+                  tcs:
+                    allOf:
+                      - type: object
+                        properties:
+                          diff_value:
+                            type: string
+                      - *ref_0
+                  tds:
+                    allOf:
+                      - type: object
+                        properties:
+                          diff_value:
+                            type: string
+                      - *ref_0
+                  updated_at:
+                    type: string
+                    format: date-time
+                  settlement_ref_no:
+                    type: string
+required:
+  - context
+  - message

@@ -1,0 +1,12 @@
+BAP:
+  $ref: ./protocol-server-config/configs/NTS/BAP/index.yaml
+BPP:
+  $ref: ./protocol-server-config/configs/NTS/BPP/index.yaml
+schema:
+  $ref: ./protocol-server-config/configs/schema/NTS/index.yaml
+# attributes:
+#   personal-loan-flow-1:
+#     $ref: ./protocol-server-config/configs/attributes/personal-loan-flow-1/index.yaml
+#   invoice-loan-flow-1:
+#     $ref: ./protocol-server-config/configs/attributes/invoice-loan-flow-1/index.yaml
+version: "1.0.0"

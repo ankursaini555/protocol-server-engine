@@ -1,0 +1,4 @@
+[submodule "protocol-server-config"]
+	path = protocol-server-config
+	url = https://github.com/ONDC-Official/protocol-server-config
+	branch = master

@@ -1,0 +1,16 @@
+calls:
+  - config: "search"
+    mode: "ASYNC"
+    unsolicated: false
+    callback:
+      config: "search"
+      endpoint: "mapper/ondc"
+      mode: "ASYNC"
+      unsolicitedEndpoint: "/search"
+  - config: "on_search"
+    mode: "ASYNC"
+    callback:
+      config: "on_search"
+      endpoint: "mapper/ondc"
+      mode: "ASYNC"
+      unsolicitedEndpoint: "mapper/unsolicited"

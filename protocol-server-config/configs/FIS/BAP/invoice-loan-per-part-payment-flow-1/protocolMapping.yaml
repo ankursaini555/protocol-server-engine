@@ -1,0 +1,23 @@
+protocol:
+  update:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.update_target
+        value: '"payments"'
+      - beckn_key: message.order.id
+        value: data.orderId
+      - beckn_key: message.order.payments[0].time.label
+        value: '"PRE_PART_PAYMENT"'
+
+      - beckn_key: message.order.payments[0].params.amount
+        value: data.prePaymentAmount
+      - beckn_key: message.order.payments[0].params.currency
+        value: "'INR'"
+
+  on_update:
+    mapping:
+      - business_key: error
+        extractionPath: error

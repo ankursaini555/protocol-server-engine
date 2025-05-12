@@ -1,0 +1,110 @@
+flows:
+  - summary: Metro Seller
+    id: metro-seller-flow-1
+    createSessionAtBuyer: true
+    domain: ONDC:TRV11
+    shouldDispaly: true
+    sessionData:
+      currency: INR
+      matched: true
+      catalogname: ICICI Bank
+      formlink: "?transaction_id="
+      loan_provider:
+        images:
+        - url: https://www.icicibank.com/content/dam/icicibank/india/assets/images/header/logo.png
+          size_type: sm 
+        name: ICICI Bank
+        short_desc: ICICI Bank Ltd
+        long_desc: ICICI Bank Ltd, India.
+      loanCategaory: INVOICE_BASED_LOAN
+      version: "2.0.0"
+      collectedBy: BAP
+      paymentCollectedBy: BPP
+      bankAccountNumber: "123456789"
+      virtualPaymentAddress: "adasd@okiciic"
+      bankCode: "fj3jf9ij3f02"
+      bpp_uri: https://mobility-staging.ondc.org/seller_ui/
+      bpp_id: mobility-staging.ondc.org/seller_ui
+      loan_provider_id : PROVIDER_ID
+      cancellation_terms:
+      - fulfillment_state:
+          descriptor:
+            code: SANCTIONED
+        cancellation_fee:
+          percentage: 3%
+      - external_ref:
+          mimetype: text/html
+          url: https://bpp.credit.becknprotocol.org/tnc.html
+      - fulfillment_state:
+          descriptor:
+            code: DISBURSED
+        cancellation_fee:
+          percentage: 5%
+      categories:
+        - descriptor:
+            name: Invoice based loan
+            code: INVOICE_BASED_LOAN
+          id: "101123"
+      tags:
+        CONTACT_INFO:
+          GRO_NAME: ICICI
+          GRO_EMAIL: lifeline@iciciprulife.com
+          GRO_CONTACT_NUMBER: 1860 266 7766
+          GRO_DESIGNATION: Nodal Grievance Redressal Officer
+          GRO_ADDRESS: One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013
+          CUSTOMER_SUPPORT_LINK: https://buy.iciciprulife.com/buy/GrievanceRedStep.htm?execution=e1s1
+          CUSTOMER_SUPPORT_CONTACT_NUMBER: 1800 1080
+          CUSTOMER_SUPPORT_EMAIL: customer.care@icicibank.com
+        LSP_INFO:
+          LSP_NAME: ICICI_LSP
+          LSP_EMAIL: lsp@iciciprulife.com
+          LSP_CONTACT_NUMBER: 1860 266 7766
+          LSP_ADDRESS: One Indiabulls centre, Tower 1, 18th Floor Jupiter mill compound 841, Senapati Bapat Marg, Elphinstone Road, Mumbai 400013
+      paymentTagsSearch:
+        BUYER_FINDER_FEES:
+          BUYER_FINDER_FEES_TYPE: percent-annualized
+          BUYER_FINDER_FEES_PERCENTAGE: "12"
+          display: true
+        SETTLEMENT_TERMS:
+          SETTLEMENT_WINDOW: "PT60M"
+          SETTLEMENT_BASIS: INVOICE_RECEIPT
+          MANDATORY_ARBITRATION: "TRUE"
+          COURT_JURISDICTION: "New Delhi"
+          STATIC_TERMS: https://bpp.credit.becknprotocol.org/personal-banking/loans/invoice-based-loan
+          OFFLINE_CONTRACT: "true"
+          display: true
+    protocol:
+      $ref: ./metro-seller-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./metro-seller-flow-1/calls.yaml#/calls
+    api:
+      search:
+        default:
+          service_url: http://localhost:5501/mapper/ondc
+          sync: false
+    ui: true
+
+
+
+flow_selector:
+  search:
+    default:
+      config_id: "metro-seller-flow-1"
+    metro-flow:
+      condition:
+          operation:
+            type: AND
+            input:
+              value:
+              - operation:
+                  type: EQUAL
+                  title: Check search message code
+                  input:
+                    value:
+                      - operation:
+                          type: READ
+                          input:
+                            value: "req_body.message.intent.fulfillment.vehicle.category"
+                      - METRO
+      config_id  : "metro-seller-flow-1"
+

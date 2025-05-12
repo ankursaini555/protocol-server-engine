@@ -1,0 +1,6 @@
+.env
+node_modules
+.buyer.FIS.env
+.seller.mob.env
+.seller.FIS.env
+.buyer.mob.env

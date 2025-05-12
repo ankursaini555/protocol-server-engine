@@ -1,0 +1,12 @@
+BAP:
+  $ref: ./TRV/BAP/index.yaml
+BPP:
+  $ref: ./TRV/BPP/index.yaml
+schema:
+  $ref: ./schema/FIS/index.yaml
+attributes:
+  personal-loan-flow-1:
+    $ref: ./attributes/personal-loan-flow-1/index.yaml
+  invoice-loan-flow-1:
+    $ref: ./attributes/invoice-loan-flow-1/index.yaml
+version: "1.0.0"

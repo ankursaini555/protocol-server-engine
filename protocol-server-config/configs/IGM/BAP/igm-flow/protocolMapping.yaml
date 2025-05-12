@@ -1,0 +1,86 @@
+protocol:
+  issue:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.issue.id
+        value: session.issueId
+      - beckn_key: message.issue.status
+        value: session.issueStatus
+      - beckn_key: message.issue.level
+        value: session.issuelevel
+      
+
+      - beckn_key: message.issue.expected_response_time.duration
+        value: session.expectedresponsetime
+
+      - beckn_key: message.issue.expected_resolution_time.duration
+        value: session.expectedresolutiontime
+
+      - beckn_key: message.issue.ref
+        value: session.ref
+
+
+      - beckn_key: message.issue.actors
+        value: session.actors
+ 
+      - beckn_key: message.issue.source_id
+        value: session.sourceid
+      - beckn_key: message.issue.complaint_id
+        value: session.complaint_id
+       
+      - beckn_key: message.issue.description.code
+        value: session.descriptionCode
+      - beckn_key: message.issue.description.short_desc
+        value: session.descriptionshortdesc
+      - beckn_key: message.issue.description.long_desc
+        value: session.descriptionlongdesc
+      - beckn_key: message.issue.description.additional_desc.url
+        value: session.additional_desc.url
+      - beckn_key: message.issue.description.additional_desc.content_type
+        value: session.additional_desc.content_type
+
+
+      - beckn_key: message.issue.last_action_id
+        value: session.lastactionId
+        
+      - beckn_key: message.issue.actions[0].id
+        value: session.actionsId
+      - beckn_key: message.issue.actions[0].description.code
+        value: session.actionsCode
+      - beckn_key: message.issue.actions[0].description.short_desc
+        value: session.shortDesc
+      - beckn_key: message.issue.actions[0].updated_at
+        value: session.actionUpdatedAt
+      - beckn_key: message.issue.actions[0].action_by
+        value: session.actionActionby
+      - beckn_key: message.issue.actions[0].action_by
+        value: session.actionActionby
+      - beckn_key: message.issue.actions[0].actor_details.name
+        value: session.actionActordetail
+
+  report:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.ref_transaction_id
+        value: session.refTransactionId
+      - beckn_key: message.ref_message_id
+        value: session.refMessage.id
+
+  on_issue:
+    mapping:
+      - business_key: "bpp_id"
+        extractionPath: context.bpp_id
+      - business_key: "bpp_uri"
+        extractionPath: context.bpp_uri
+      - business_key: formData
+        extractionPath: "message.catalog.providers[]{providerId: id}.items[]{formUrl : xinput.form.url, id : xinput.form.id, itemId: id}"
+      - business_key: itemDetails
+        extractionPath: "message.catalog.providers[].items[?(parent_item_id)]{itemID: id, parentItemId: parent_item_id}"
+      - business_key: error
+        extractionPath: error

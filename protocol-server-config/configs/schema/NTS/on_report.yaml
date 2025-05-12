@@ -1,0 +1,214 @@
+type: object
+properties:
+  context:
+    description: Describes a beckn message context
+    type: object
+    properties:
+      domain:
+        type: string
+      location:
+        type: object
+        properties:
+          country:
+            type: object
+            properties:
+              code:
+                type: string
+                example: IND
+          city:
+            type: object
+            properties:
+              code:
+                type: string
+                example: '*'
+      action:
+        type: string
+        description: >-
+          Defines the Beckn API call. Any actions other than the enumerated
+          actions are not supported by Beckn Protocol
+      version:
+        type: string
+        description: Version of Beckn core API specification being used
+      bap_id:
+        type: string
+        description: >-
+          Unique id of the BAP. By default it is the fully qualified domain name
+          of the BAP
+      bap_uri:
+        type: string
+        format: uri
+        description: >-
+          URI of the BAP for accepting callbacks. Must have the same domain name
+          as the bap_id
+      bpp_id:
+        type: string
+        description: >-
+          Unique id of the BPP. By default it is the fully qualified domain name
+          of the BPP
+      bpp_uri:
+        type: string
+        format: uri
+        description: URI of the BPP. Must have the same domain name as the bap_id
+      transaction_id:
+        type: string
+        description: >-
+          This is a unique value which persists across all API calls from search
+          through confirm
+      message_id:
+        type: string
+        description: >-
+          This is a unique value which persists during a request / callback
+          cycle
+      timestamp:
+        type: string
+        format: date-time
+        description: Time of request generation in RFC3339 format
+      key:
+        type: string
+        description: The encryption public key of the sender
+      ttl:
+        type: string
+        description: >-
+          The duration in ISO8601 format after timestamp for which this message
+          holds valid
+    required:
+      - domain
+      - action
+      - location
+      - version
+      - transaction_id
+      - message_id
+      - bap_id
+      - bap_uri
+      - timestamp
+  message:
+    type: object
+    properties:
+      collector_app_id:
+        type: string
+      receiver_app_id:
+        type: string
+      settlement:
+        description: >
+          - Describes the settlement of NP -NP - Describes the miscellaneous
+          settlement - Describes the NIL settlement
+        type: object
+        properties:
+          type:
+            description: Describes the type of the settlement
+            type: string
+          id:
+            description: |
+              * settlement id of the settlement file
+            type: string
+          order:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  description: Describes the order id
+                  type: string
+                inter_participant:
+                  description: >-
+                    Provides details about the settlement amount, payable/
+                    receivable and status between the Collector and the Receiver
+                  type: object
+                  properties:
+                    settled_amount: &ref_0
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                          example: INR
+                        value:
+                          type: string
+                          example: ''
+                    amount: *ref_0
+                    status:
+                      type: string
+                      enum:
+                        - SETTLED
+                        - NOT-SETTLED
+                    reference_no:
+                      type: string
+                    error: &ref_1
+                      description: >-
+                        Describes an error object that is returned by a
+                        Collector or Receiver as a response or callback to an
+                        action by another network participant. This object is
+                        sent when any request received by a network participant
+                        is unacceptable. This object can be sent either during
+                        Ack or with the callback.
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: >-
+                            Standard error code. For full list of error codes,
+                            refer <a href =
+                            https://ondc-official.github.io/ONDC-NTS-Specifications/#error>here</a>
+                        message:
+                          type: string
+                          description: >-
+                            Human readable message describing the error. Used
+                            mainly for logging. Not recommended to be shown to
+                            the user.
+                collector:
+                  description: >-
+                    Provides details about the amount to be retained by the
+                    collector
+                  type: object
+                  properties:
+                    amount: *ref_0
+                provider:
+                  description: >-
+                    Provides details about the amount to be settled to the
+                    Provider of an NP.
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: ''
+                    name:
+                      type: string
+                      example: ''
+                    bank_details:
+                      type: object
+                      properties:
+                        account_no:
+                          type: string
+                          example: ''
+                        ifsc_code:
+                          type: string
+                          example: ''
+                    status:
+                      type: string
+                      enum:
+                        - SETTLED
+                        - NOT-SETTLED
+                    amount: *ref_0
+                    reference_no:
+                      type: string
+                    error: *ref_1
+                self:
+                  type: object
+                  description: >-
+                    Provides details about the amount for the NP to move to
+                    their operative account
+                  properties:
+                    amount: *ref_0
+                    status:
+                      type: string
+                      enum:
+                        - SETTLED
+                        - NOT-SETTLED
+                    reference_no:
+                      type: string
+                    error: *ref_1
+    required:
+      - settlement
+  error: *ref_1
+required:
+  - context
+  - message

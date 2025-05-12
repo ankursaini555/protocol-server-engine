@@ -1,0 +1,49 @@
+flows:
+  - summary: Invoice Based Loans
+    id: invoice-loan-flow-1
+    domain: ONDC:FIS12
+    shouldDispaly: true
+    sessionData:
+      loanCategaory: INVOICE_BASED_LOAN
+      version: "2.1.0"
+      collectedBy: BAP
+      paymentCollectedBy: BPP
+      bankAccountNumber: "123456789"
+      virtualPaymentAddress: "adasd@okiciic"
+      bankCode: "fj3jf9ij3f02"
+      paymentTagsSearch:
+        BUYER_FINDER_FEES:
+          BUYER_FINDER_FEES_TYPE: percent-annualized
+          BUYER_FINDER_FEES_PERCENTAGE: "1"
+        SETTLEMENT_TERMS:
+          DELAY_INTEREST: 2.5
+          STATIC_TERMS: "https://bap.credit.becknprotocol.io/personal-banking/loans/personal-loan"
+          OFFLINE_CONTRACT: "true"
+    protocol:
+      $ref: ./invoice-loan-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./invoice-loan-flow-1/calls.yaml#/calls
+
+  - summary: Missed-EMI Payment
+    id: invoice-loan-missed-emi-flow-1
+    shouldDispaly: false
+    protocol:
+      $ref: ./invoice-loan-missed-emi-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./invoice-loan-missed-emi-flow-1/calls.yaml#/calls
+
+  - summary: Pre-Part Payment
+    id: invoice-loan-per-part-payment-flow-1
+    shouldDispaly: false
+    protocol:
+      $ref: ./invoice-loan-per-part-payment-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./invoice-loan-per-part-payment-flow-1/calls.yaml#/calls
+
+  - summary: Loan Foreclosure
+    id: invoice-loan-foreclosure-flow-1
+    shouldDispaly: false
+    protocol:
+      $ref: ./invoice-loan-foreclosure-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./invoice-loan-foreclosure-flow-1/calls.yaml#/calls

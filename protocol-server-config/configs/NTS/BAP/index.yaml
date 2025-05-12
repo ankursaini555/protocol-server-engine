@@ -1,0 +1,14 @@
+flows:
+  - summary: RSF Flow
+    id: rsf-flow-1
+    domain: ONDC:NTS10
+    shouldDispaly: true
+    sessionData:
+      version: "2.0.0"
+      bankAccountNumber: "1234567890"
+      ifscCode": "IFSC0001"
+
+    protocol:
+      $ref: ./rsf-flow-1/protocolMapping.yaml#/protocol
+    calls:
+      $ref: ./rsf-flow-1/calls.yaml#/calls

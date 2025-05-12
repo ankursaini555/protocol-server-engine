@@ -1,0 +1,155 @@
+type: object 
+properties:
+  context:
+    type: object
+    properties:
+      domain:
+        type: string
+      location:
+        type: object
+        properties:
+          country:
+            type: object
+            properties:
+              code:
+                type: string
+          city:
+            type: object
+            properties:
+              code:
+                type: string
+      action:
+        type: string
+      core_version:
+        type: string
+      bap_id:
+        type: string
+      bap_uri:
+        type: string
+      bpp_id:
+        type: string
+      bpp_uri:
+        type: string
+      transaction_id:
+        type: string
+      message_id:
+        type: string
+      timestamp:
+        type: string
+        format: date-time
+      ttl:
+        type: string
+  message:
+    type: object
+    properties:
+      issue:
+        type: object
+        properties:
+          id:
+            type: string
+          status:
+            type: string
+          level:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+          expected_response_time:
+            type: object
+            properties:
+              duration:
+                type: string
+          expected_resolution_time:
+            type: object
+            properties:
+              duration:
+                type: string
+          refs:
+            type: array
+            items:
+              type: object
+              properties:
+                ref_id:
+                  type: string
+                ref_type:
+                  type: string
+          actors:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: string
+                info:
+                  type: object
+                  properties:
+                    org:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    person:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    contact:
+                      type: object
+                      properties:
+                        phone:
+                          type: string
+                        email:
+                          type: string
+          source_id:
+            type: string
+          complainant_id:
+            type: string
+          respondent_ids:
+            type: array
+            items:
+              type: string
+          description:
+            type: object
+            properties:
+              code:
+                type: string
+              short_desc:
+                type: string
+              images:
+                type: array
+                items:
+                  type: string
+          last_action_id:
+            type: string
+          actions:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                description:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    short_desc:
+                      type: string
+                updated_at:
+                  type: string
+                  format: date-time
+                action_by:
+                  type: string
+                actor_details:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+required:
+  - context
+  - message

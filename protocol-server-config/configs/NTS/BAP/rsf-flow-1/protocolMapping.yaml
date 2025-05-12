@@ -1,0 +1,69 @@
+protocol:
+  settle:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.collector_app_id
+        value: session.collectorAppId
+      - beckn_key: message.receiver_app_id
+        value: session.receiverAppId
+
+      - beckn_key: message.settlement.type
+        value: session.settlementType
+      - beckn_key: message.settlement.id
+        value: session.settlementId
+
+      - beckn_key: message.settlement.orders[0].id
+        value: session.orderId
+      - beckn_key: message.settlement.orders[0].inter_participant.amount.currency
+        value: "'INR'"
+      - beckn_key: message.settlement.orders[0].inter_participant.amount.value
+        value: session.interParticipantValue
+      - beckn_key: message.settlement.orders[0].collector.amount.currency
+        value: "'INR'"
+      - beckn_key: message.settlement.orders[0].collector.amount.value
+        value: session.collectorValue
+
+      - beckn_key: message.settlement.orders[0].provider.id
+        value: session.providerId
+      - beckn_key: message.settlement.orders[0].provider.name
+        value: session.providerName
+      - beckn_key: message.settlement.orders[0].provider.bank_details.account_no
+        value: session.bankAccountNumber
+      - beckn_key: message.settlement.orders[0].provider.bank_details.ifsc_code
+        value: session.ifscCode
+      - beckn_key: message.settlement.orders[0].provider.amount.currency
+        value: "'INR'"
+      - beckn_key: message.settlement.orders[0].provider.amount.value
+        value: session.providerValue
+
+      - beckn_key: message.settlement.orders[0].self.amount.currency
+        value: "'INR'"
+      - beckn_key: message.settlement.orders[0].self.amount.value
+        value: session.providerValue
+
+  report:
+    mapping:
+      - beckn_key: context
+        value: session
+        compute: buildContext(session, action)
+
+      - beckn_key: message.ref_transaction_id
+        value: session.refTransactionId
+      - beckn_key: message.ref_message_id
+        value: session.refMessage.id
+
+  on_settle:
+    mapping:
+      - business_key: "bpp_id"
+        extractionPath: context.bpp_id
+      - business_key: "bpp_uri"
+        extractionPath: context.bpp_uri
+      - business_key: formData
+        extractionPath: "message.catalog.providers[]{providerId: id}.items[]{formUrl : xinput.form.url, id : xinput.form.id, itemId: id}"
+      - business_key: itemDetails
+        extractionPath: "message.catalog.providers[].items[?(parent_item_id)]{itemID: id, parentItemId: parent_item_id}"
+      - business_key: error
+        extractionPath: error
