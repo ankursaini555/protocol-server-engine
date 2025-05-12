@@ -8,10 +8,12 @@ export const checkHealth = async (
     name: string;
     status: string;
     dependencyServices: { name: string; status: string }[];
+    timestamp: string;
   } = {
     name: currentService.name,
     status: "down",
     dependencyServices: [],
+    timestamp: new Date().toISOString(),
   };
 
   // Check the status of the current service
