@@ -45,7 +45,6 @@ export const checkHealth = async (
 
     // Map the results to extract statuses
     response.dependencyServices = dependencyChecks.map((check, index) => {
-      console.log(check);
       if (check.status === "fulfilled") {
         return check.value;
       } else {
