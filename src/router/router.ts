@@ -30,7 +30,8 @@ router.post("/validate_header", async (req, res) => {
 // route for check halth of the service
 router.get("/health", healthCheckAPI);
 
-router.get("/health-test", (req: Request, res: Response) => {
+// self health check route
+router.get("/health-self", (req: Request, res: Response) => {
   res.status(200).send({
     status: "Service is running",
     timestamp: new Date().toISOString(),

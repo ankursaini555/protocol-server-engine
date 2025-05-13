@@ -6,15 +6,15 @@ export const healthCheckAPI = async (req: Request, res: Response) => {
     // Define the current service and its dependencies
     const currentService = {
       name: "Protocol Server Engine",
-      url: "http://localhost:7201/health-test", // check current service by session api route
+      url: "http://localhost:7201/health-self", // check current service by session api route
     };
 
     const dependencyServices = [
       {
         name: "Seller Mock Engine",
         url:
-          process.env.BACKEND_SERVER_URL + "/health-test" ||
-          "http://localhost:7202/health-test",
+          process.env.BACKEND_SERVER_URL + "/health-self" ||
+          "http://localhost:7202/health-self",
       },
       {
         name: "Mock UI",

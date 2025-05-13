@@ -11,18 +11,10 @@ export const checkHealth = async (
     timestamp: string;
   } = {
     name: currentService.name,
-    status: "down",
+    status: "up",
     dependencyServices: [],
     timestamp: new Date().toISOString(),
   };
-
-  // Check the status of the current service
-  try {
-    const currentServiceResult = await axios.get(currentService.url);
-    response.status = currentServiceResult.status === 200 ? "up" : "down";
-  } catch {
-    response.status = "down";
-  }
 
   // Check the status of dependency services if provided
   if (dependencyServices && Array.isArray(dependencyServices)) {
