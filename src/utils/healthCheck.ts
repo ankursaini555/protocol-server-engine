@@ -9,11 +9,13 @@ export const checkHealth = async (
     status: string;
     dependencyServices: { name: string; status: string }[];
     timestamp: string;
+    statusCode: number;
   } = {
     name: currentService.name,
     status: "up",
     dependencyServices: [],
     timestamp: new Date().toISOString(),
+    statusCode: 200,
   };
 
   // Check the status of dependency services if provided
@@ -27,6 +29,7 @@ export const checkHealth = async (
             status: result.status === 200 ? "up" : "down",
           };
         } catch {
+          response.statusCode = 299;
           return {
             name: service.name,
             status: "down",
@@ -49,4 +52,27 @@ export const checkHealth = async (
   }
 
   return response;
+};
+
+export const JsonResponseToText = (json: any) => {
+  let text = "";
+
+  // Add the main service name and status
+  text += `${json.name
+    .replace(/\s+/g, "_")
+    .toUpperCase()}=${json.status.toUpperCase()}\n`;
+
+  // Process dependency services
+  if (Array.isArray(json.dependencyServices)) {
+    json.dependencyServices.forEach((service: any) => {
+      text += `${service.name
+        .replace(/\s+/g, "_")
+        .toUpperCase()}=${service.status.toUpperCase()}\n`;
+    });
+  }
+
+  // Add the timestamp
+  text += `TIME=${json.timestamp}`;
+
+  return text.trim();
 };

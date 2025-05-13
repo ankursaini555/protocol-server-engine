@@ -1,5 +1,5 @@
-import { checkHealth } from "../utils/healthCheck";
 import { Request, Response } from "express";
+import { checkHealth, JsonResponseToText } from "../utils/healthCheck";
 
 export const healthCheckAPI = async (req: Request, res: Response) => {
   try {
@@ -23,12 +23,13 @@ export const healthCheckAPI = async (req: Request, res: Response) => {
     ];
 
     const healthStatus = await checkHealth(currentService, dependencyServices);
-    res.send(healthStatus);
+    const textResponse = JsonResponseToText(healthStatus);
+    res.status(healthStatus.statusCode).send(textResponse);
   } catch (error) {
     console.error("Error in healthCheckAPI:", error);
     res.status(500).send({
       message: "An error occurred while processing the health check.",
-      error: error || error,
+      error: error,
     });
   }
 };

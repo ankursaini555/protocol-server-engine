@@ -1,15 +1,14 @@
-import express from "express";
-import { Request, Response } from "express";
-import { verifyHeader } from "../core/auth_core";
-
-export const router = express.Router();
+import express, { Request, Response } from "express";
+import { healthCheckAPI } from "../controller/health.controller";
 import {
   becknToBusiness,
   businessToBecknWrapper,
-  updateSession,
   getsession,
+  updateSession,
 } from "../controller/index";
-import { healthCheckAPI } from "../controller/health.controller";
+import { verifyHeader } from "../core/auth_core";
+
+export const router = express.Router();
 const logger = require("../utils/logger").init();
 
 // buss > beckn
@@ -32,10 +31,7 @@ router.get("/health", healthCheckAPI);
 
 // self health check route
 router.get("/health-self", (req: Request, res: Response) => {
-  res.status(200).send({
-    status: "Service is running",
-    timestamp: new Date().toISOString(),
-  });
+  res.status(200).send(`STATUS:UP,TIMESTAMP:${new Date().toISOString()}`);
 });
 
 router.get("/session", getsession);
